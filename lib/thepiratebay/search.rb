@@ -16,22 +16,15 @@ module ThePirateBay
       doc.css('#searchResult tr').each do |row|
         title = row.search('.detLink').text
         next if title == ''
-        seeders = row.search('td')[2].text.to_i
-        leechers = row.search('td')[3].text.to_i
-        torrent_link = row.search('td a')[3]['href']
-        magnet_link = row.search('td a')[4]['href']
-        category = row.search('td a')[0].text
-        torrent_id = torrent_link.scan(/\d+/)[0]
-
-        torrent = {:title => title,
-                   :seeders => seeders,
-                   :leechers => leechers,
-                   :torrent_link => torrent_link,
-                   :magnet_link => magnet_link,
-                   :category => category,
-                   :torrent_id => torrent_id}
-
-        torrents.push(torrent)
+        torrents << {
+          title: title,
+          seeders: row.search('td')[2].text.to_i,
+          leechers: row.search('td')[3].text.to_i,
+          torrent_link: row.search('td a')[2]['href'],
+          magnet_link: row.search('td a')[3]['href'],
+          category: row.search('td a')[0].text,
+          torrent_id: row.search('td a')[2]['href'].scan(/\d+/)[0]
+        }
       end
 
       @torrents = torrents
