@@ -7,34 +7,22 @@ module ThePirateBay
     attr_reader :torrents
     alias_method :results, :torrents
 
-    def initialize(query, page = 0, sort_by = 99, category = 0)
-
+    def initialize(query, page=0, sort_by=99, category=0)
       query = URI.escape(query)
-      doc = Nokogiri::HTML(open('http://thepiratebay.org/search/' + query + '/' + page.to_s + '/' + sort_by.to_s + '/' + category.to_s + ''))
-      torrents = []
-
-      doc.css('#searchResult tr').each do |row|
+      doc = Nokogiri::HTML(open("http://thepiratebay.org/search/#{query}/#{page.to_s}/#{sort_by.to_s}/#{category.to_s}"))
+      @torrents = doc.css('#searchResult tr').map do |row|
         title = row.search('.detLink').text
-        next if title == ''
-        seeders = row.search('td')[2].text.to_i
-        leechers = row.search('td')[3].text.to_i
-        torrent_link = row.search('td a')[3]['href']
-        magnet_link = row.search('td a')[4]['href']
-        category = row.search('td a')[0].text
-        torrent_id = torrent_link.scan(/\d+/)[0]
-
-        torrent = {:title => title,
-                   :seeders => seeders,
-                   :leechers => leechers,
-                   :torrent_link => torrent_link,
-                   :magnet_link => magnet_link,
-                   :category => category,
-                   :torrent_id => torrent_id}
-
-        torrents.push(torrent)
-      end
-
-      @torrents = torrents
+        next if title.empty?
+        {
+          title: title,
+          seeders: row.search('td')[2].text.to_i,
+          leechers: row.search('td')[3].text.to_i,
+          torrent_link: row.search('td a')[2]['href'],
+          magnet_link: row.search('td a')[3]['href'],
+          category: row.search('td a')[0].text,
+          torrent_id: row.search('td a')[2]['href'].scan(/\d+/)[0]
+        }
+      end.compact
     end
   end
 end

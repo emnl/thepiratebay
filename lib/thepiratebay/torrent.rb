@@ -3,33 +3,39 @@ require 'open-uri'
 
 module ThePirateBay
   class Torrent
+    PROCESS = Hash.new(->(e){ e.text.gsub(/\n|\t|\s$|^\s/, '') })
+    .merge(
+      files: ->(e){ e.text.to_i },
+      size: ->(e){ e.text.scan(/\d+/)[-1].to_i },
+      info: ->(e){ e.at('a')[:href] },
+      spoken_languages: ->(e){ e.text.split(', ') },
+      texted_languages: ->(e){ e.text.split(', ') },
+      tags: ->(e){ e.search('a').map(&:text) },
+      uploaded: ->(e){ Time.gm *e.text.scan(/\d+/).reject(&:empty?).map(&:to_i) },
+      seeders: ->(e){ e.text.to_i },
+      leechers: ->(e){ e.text.to_i },
+      comments: ->(e){ e.text.to_i }
+    )
+
     def self.find(torrent_id)
-
-      doc = Nokogiri::HTML(open('http://thepiratebay.org/torrent/' + torrent_id.to_s))
-
-      contents = doc.search('#detailsframe')
-      title = contents.search('#title').text.strip
-      category = contents.search('#details .col1 dd')[0].text
-      nr_files = contents.search('#details .col1 dd')[1].text.to_i
-      size = contents.search('#details .col1 dd')[2].text
-      uploaded = contents.search('#details .col2 dd')[1].text
-      seeders = contents.search('#details .col2 dd')[3].text.to_i
-      leechers = contents.search('#details .col2 dd')[4].text.to_i
-      torrent_link = contents.search('#details .download a')[0]['href']
-      magnet_link = contents.search('#details .download a')[1]['href']
-      description = contents.search('#details .nfo pre').text
-
-      torrent = {:title => title,
-                 :category => category,
-                 :files => nr_files, :size => size,
-                 :uploaded => uploaded,
-                 :seeders => seeders,
-                 :leechers => leechers,
-                 :torrent_link => torrent_link,
-                 :magnet_link => magnet_link,
-                 :description => description}
-
-      return torrent
+      url = "http://thepiratebay.org/torrent/#{torrent_id.to_s}"
+      doc = Nokogiri::HTML(open(url))
+      keys = doc.search('dt').map do |key| 
+        key.text.downcase
+        .gsub(/:$/, '')
+        .gsub(/\(s\)/, 's')
+        .gsub(/\s/, '_')
+        .to_sym 
+      end
+      values = doc.search('dd')
+      attr_hash = Hash[key.zip(values)]
+      .inject({}) { |h,(k,v)| h[k] = PROCESS[k].call(v); h }
+      .merge(
+        title: doc.at('#title').text.gsub(/\n|\t|\s$|^\s/, ''),
+        torrent_link: url,
+        magnet_link: doc.at('.download a')[:href],
+        info_hash: doc.at('dl').children.last.text.gsub(/\n|\t|\s$|^\s/, '')
+      )
     end
   end
 end
