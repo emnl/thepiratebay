@@ -28,8 +28,8 @@ module ThePirateBay
         .to_sym 
       end
       values = doc.search('dd')
-      attr_hash = Hash[Array.new(keys.size) { |n| [keys[n], values[n]] }]
-      .inject({}){ |h,(k,v)| h[k] = PROCESS[k].call(v); h }
+      attr_hash = Hash[key.zip(values)]
+      .inject({}) { |h,(k,v)| h[k] = PROCESS[k].call(v); h }
       .merge(
         title: doc.at('#title').text.gsub(/\n|\t|\s$|^\s/, ''),
         torrent_link: url,
