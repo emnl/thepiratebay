@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name              = %q{thepiratebay}
-  s.version           = '0.1'
+  s.version           = '0.2.0'
   s.summary           = %q{A simple interface to ThePirateBay.org}
   s.description       = %q{A simple interface to ThePirateBay.org}
   s.files             = `git ls-files`.split("\n")
@@ -9,7 +9,7 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files  = Dir['[A-Z]*']
   s.rdoc_options      = ["--charset=UTF-8"]
   s.authors           = ["Emanuel Andersson"]
-  s.date              = %q{2011-05-19}
+  s.date              = %q{2012-03-25}
   s.email             = %q{manusdude@gmail.com}
   s.homepage          = %q{http://github.com/emnl/thepiratebay}
 
