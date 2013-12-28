@@ -12,9 +12,10 @@ module ThePirateBay
         uri = URI.parse(request_url)
         host = tor.split(':').first
         port = tor.split(':').last.to_i
-        Net::HTTP.SOCKSProxy(host, port).start(uri.host, uri.port) do |http|
-          doc = http.get(uri.path)
+        request = Net::HTTP.SOCKSProxy(host, port).start(uri.host, uri.port) do |http|
+          http.get(uri.path)
         end
+        doc = Nokogiri::HTML(request.body)
       else
         doc = Nokogiri::HTML(open(request_url))
       end
