@@ -11,7 +11,7 @@ module ThePirateBay
     def initialize(query, page = 0, sort_by = 99, category = 0, tor = false)
 
       query = URI.escape(query)
-      request_url = 'http://thepiratebay.org/search/' + query + '/' + page.to_s + '/' + sort_by.to_s + '/' + category.to_s + ''
+      request_url = 'http://thepiratebay.se/search/' + query + '/' + page.to_s + '/' + sort_by.to_s + '/' + category.to_s + ''
       if tor
         tor = '127.0.0.1:9050' if tor == true
         uri = URI.parse(request_url)

@@ -6,7 +6,7 @@ module ThePirateBay
   class Torrent
     def self.find(torrent_id, tor = false)
 
-      request_url = 'http://thepiratebay.org/torrent/' + torrent_id.to_s
+      request_url = 'http://thepiratebay.se/torrent/' + torrent_id.to_s
       if tor
         tor = '127.0.0.1:9050' if tor == true
         uri = URI.parse(request_url)
