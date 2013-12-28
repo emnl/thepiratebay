@@ -1,16 +1,28 @@
 require 'nokogiri'
 require 'open-uri'
 require 'uri'
+require 'socksify/http'
 
 module ThePirateBay
   class Search
     attr_reader :torrents
     alias_method :results, :torrents
 
-    def initialize(query, page = 0, sort_by = 99, category = 0)
+    def initialize(query, page = 0, sort_by = 99, category = 0, tor = false)
 
       query = URI.escape(query)
-      doc = Nokogiri::HTML(open('http://thepiratebay.org/search/' + query + '/' + page.to_s + '/' + sort_by.to_s + '/' + category.to_s + ''))
+      request_url = 'http://thepiratebay.org/search/' + query + '/' + page.to_s + '/' + sort_by.to_s + '/' + category.to_s + ''
+      if tor
+        tor = '127.0.0.1:9050' if tor == true
+        uri = URI.parse(request_url)
+        host = tor.split(':').first
+        port = tor.split(':').last.to_i
+        Net::HTTP.SOCKSProxy(host, port).start(uri.host, uri.port) do |http|
+          doc = http.get(uri.path)
+        end
+      else
+        doc = Nokogiri::HTML(open(request_url))
+      end
       torrents = []
 
       doc.css('#searchResult tr').each do |row|

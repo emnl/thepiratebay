@@ -1,11 +1,23 @@
 require 'nokogiri'
 require 'open-uri'
+require 'socksify/http'
 
 module ThePirateBay
   class Torrent
-    def self.find(torrent_id)
+    def self.find(torrent_id, tor = false)
 
-      doc = Nokogiri::HTML(open('http://thepiratebay.org/torrent/' + torrent_id.to_s))
+      request_url = 'http://thepiratebay.org/torrent/' + torrent_id.to_s
+      if tor
+        tor = '127.0.0.1:9050' if tor == true
+        uri = URI.parse(request_url)
+        host = tor.split(':').first
+        port = tor.split(':').last.to_i
+        Net::HTTP.SOCKSProxy(host, port).start(uri.host, uri.port) do |http|
+          doc = http.get(uri.path)
+        end
+      else
+        doc = Nokogiri::HTML(open(request_url))
+      end
 
       dd_cache = contents.search('#details dd').select{|dd| is_a_number?(dd.text) }
 
