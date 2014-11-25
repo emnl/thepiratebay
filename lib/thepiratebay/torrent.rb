@@ -20,9 +20,10 @@ module ThePirateBay
         doc = Nokogiri::HTML(open(request_url))
       end
 
+      contents    = doc.search('#detailsframe')
+
       dd_cache = contents.search('#details dd').select{|dd| is_a_number?(dd.text) }
 
-      contents    = doc.search('#detailsframe')
       title       = contents.search('#title').text.strip
       category    = contents.search('#details .col1 dd')[0].text
       nr_files    = dd_cache[0].text
