@@ -5,7 +5,7 @@ module ThePirateBay
   class Torrent
     def self.find(torrent_id)
 
-      doc = Nokogiri::HTML(open('http://thepiratebay.org/torrent/' + torrent_id.to_s))
+      doc = Nokogiri::HTML(open('https://thepiratebay.se/torrent/' + torrent_id.to_s))
 
       dd_cache = contents.search('#details dd').select{|dd| is_a_number?(dd.text) }
 
@@ -19,11 +19,11 @@ module ThePirateBay
       leechers    = dd_cache[2].text
       magnet_link = contents.search('#details .download a')[1]['href']
       description = contents.search('#details .nfo pre').text
-      url         = 'http://thepiratebay.org/torrent/' + torrent_id.to_s
+      url         = 'https://thepiratebay.se/torrent/' + torrent_id.to_s
 
       torrent = {:title       => title,
                  :category    => category,
-                 :files       => nr_files, 
+                 :files       => nr_files,
                  :size        => size,
                  :uploaded    => uploaded,
                  :seeders     => seeders,
@@ -36,7 +36,7 @@ module ThePirateBay
     end
 
     def self.is_a_number?(s)
-      s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true 
+      s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
     end
   end
 end

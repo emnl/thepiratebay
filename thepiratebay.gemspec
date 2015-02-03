@@ -1,8 +1,8 @@
 spec = Gem::Specification.new do |s|
   s.name              = %q{thepiratebay}
-  s.version           = '0.2.0'
-  s.summary           = %q{A simple interface to ThePirateBay.org}
-  s.description       = %q{A simple interface to ThePirateBay.org}
+  s.version           = '0.2.1'
+  s.summary           = %q{A simple interface to ThePirateBay.se}
+  s.description       = %q{A simple interface to ThePirateBay.se}
   s.files             = `git ls-files`.split("\n")
   s.test_files        = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths     = ["lib"]
