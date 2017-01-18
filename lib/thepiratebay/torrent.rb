@@ -5,7 +5,7 @@ module ThePirateBay
   class Torrent
     def self.find(torrent_id)
 
-      doc = Nokogiri::HTML(open('http://thepiratebay.org/torrent/' + torrent_id.to_s))
+      doc = Nokogiri::HTML(open('https://thepiratebay.org/torrent/' + torrent_id.to_s))
 
       dd_cache = contents.search('#details dd').select{|dd| is_a_number?(dd.text) }
 
