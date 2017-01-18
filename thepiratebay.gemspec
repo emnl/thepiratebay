@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name              = %q{thepiratebay}
-  s.version           = '0.2.0'
+  s.version           = '0.2.1'
   s.summary           = %q{A simple interface to ThePirateBay.org}
   s.description       = %q{A simple interface to ThePirateBay.org}
   s.files             = `git ls-files`.split("\n")
@@ -11,7 +11,7 @@ spec = Gem::Specification.new do |s|
   s.authors           = ["Emanuel Andersson"]
   s.date              = %q{2012-03-25}
   s.email             = %q{manusdude@gmail.com}
-  s.homepage          = %q{http://github.com/emnl/thepiratebay}
+  s.homepage          = %q{https://github.com/emnl/thepiratebay}
 
   s.add_dependency "nokogiri"
   # s.add_development_dependency "rspec" # I'll save this one for later.
