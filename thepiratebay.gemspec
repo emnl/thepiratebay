@@ -14,5 +14,6 @@ spec = Gem::Specification.new do |s|
   s.homepage          = %q{http://github.com/emnl/thepiratebay}
 
   s.add_dependency "nokogiri"
+  s.add_dependency "socksify"
   # s.add_development_dependency "rspec" # I'll save this one for later.
 end
